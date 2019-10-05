@@ -39,7 +39,9 @@ int arrmax = 0;
 int batas;
 int batasTersimpan;
 int adc;
-int jmlArr=0;
+int jmlArrS=0;
+int jmlArrL=0;
+int ratarata=0;
 unsigned int sensor_L[10] = {};
 unsigned int sensor_S[10] = {};
 int dumb = 0;
@@ -221,15 +223,54 @@ kalibrasi:
 	    	    	dumb = analogRead(pinIRa);
 	    	    }
 	    	}
-	    	display.setCursor(0,0);
-	    	display.setTextSize(1);
-	    	for(int i=0; i<10; i++){
-	    		jmlArr+=sensor_S[i];
+
+	    	while(var2<10){
+	    		display.clearDisplay();
+	    		if(digitalRead(pinIRd)==LOW)
+	    	    {
+	    	    	while(analogRead(pinIRa)<=10);
+	    	    	sensor_L[arr2]=analogRead(pinIRa);
+	    	    	arr2++;
+	    	    	var2++;
+	    	    	display.setTextSize(4);
+	    	    	display.setCursor(40,20);
+	    	    	display.println(arr2);
+	    	    	display.display();
+	    	    }
+	    	    else{
+	    	    	dumb = analogRead(pinIRa);
+	    	    }
 	    	}
+
+	    	display.setTextSize(1);
+	    	for(int x=0; x<10; x++){
+	    	    jmlArrL+=sensor_L[x];
+	    	}
+	    	for(int i=0; i<10; i++){
+	    		jmlArrS+=sensor_S[i];
+	    	}
+
+	    	jmlArrL=jmlArrL/10;
+	    	jmlArrS=jmlArrS/10;
+	    	ratarata=(jmlArrS+jmlArrL)/2;
+
 	    	display.setCursor(0,50);
-	    	display.println(jmlArr/10);
+	    	display.println(ratarata);
 	    	display.display();	
 	    }
+
+	    if(digitalRead(pbOK)==LOW)
+		{
+			delay(20);
+			if(digitalRead(pbOK)==LOW)
+			{
+				while(digitalRead(pbOK)==LOW);
+				batas = ratarata;
+    			EEPROM.write(0, batas);
+				goto MenuUtamaKalibrasi;
+			}
+		}
+
 	    if(digitalRead(pbReset)==LOW)
 	    {
 	    	delay(20);
@@ -238,21 +279,88 @@ kalibrasi:
 	    		while(digitalRead(pbReset)==LOW);
 	    		var1=0;
 	    		arr1=0;
-	    		jmlArr=0;
+	    		var2=0;
+	    		arr2=0;
+	    		jmlArrS=0;
+	    		jmlArrL=0;
 	    		goto kalibrasi;
 	    	}
 	    }	
 	}
 
 counterStart:
+	display.clearDisplay();
 	while(1){
-		    // statement
+		// statement
+		display.setTextSize(1);
+		display.setTextColor(WHITE);
+		display.setCursor(10,0);
+		display.println("COUNTER MODE : ON");
+		display.drawLine(0,10,550,10,WHITE); 
+		display.setCursor(0,20);
+		display.println("$");
+		display.setCursor(0,30);
+		display.println("Jumlah Coin:");
+		display.setCursor(0,40);
+		display.println("Jumlah Uang:");
+		display.display();
+
+		if(analogRead(pinIRa)<=batasTersimpan)
+		{
+			display.clearDisplay();
+			delay(10);
+      		adc = analogRead(pinIRa);
+      		while (analogRead(pinIRa) <= batasTersimpan);
+      		digitalWrite(LED_BUILTIN, HIGH);
+      		jmlkoin++;
+      		koin = 1000;
+      		jmltunai += 10;
+
+      		display.setCursor(40,20);
+      		display.println(koin);
+      		display.display();
 		}
+		else if(analogRead(pinIRa)<=100)
+		{
+			display.clearDisplay();
+			delay(10);
+      		adc = analogRead(pinIRa);
+      		while (analogRead(pinIRa) <= 100);
+      		digitalWrite(LED_BUILTIN, HIGH);
+      		jmlkoin++;
+      		koin = 500;
+      		jmltunai += 5;
+
+      		display.setCursor(40,20);
+      		display.println(koin);
+      		display.display();
+		}
+
+		delay(50);
+
+    	if (digitalRead(pbReset) == LOW)
+    	{
+      		delay(20);
+      		if (digitalRead(pbReset) == LOW)
+      		{
+        		while (digitalRead(pbReset) == LOW);
+        		display.clearDisplay();
+        		goto ResetConter;
+      		}
+    	}
+	}
 
 blankTest:
 	blankShow();
 	while(1){
 	    // statement
+	}
+
+ResetConter:
+	while(1){
+	    // statement
+	    koin = 0;
+	    goto counterStart;
 	}
 
 CreditShow:
