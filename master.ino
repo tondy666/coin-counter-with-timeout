@@ -39,6 +39,7 @@ int arrmax = 0;
 int batas;
 int batasTersimpan;
 int adc;
+int jmlArr=0;
 unsigned int sensor_L[10] = {};
 unsigned int sensor_S[10] = {};
 int dumb = 0;
@@ -201,6 +202,46 @@ kalibrasi:
 	display.display();
 	while(1){
 	    // statement
+	    if(digitalRead(pinIRd)==LOW)
+	    {
+	    	while(var1<10){
+	    		display.clearDisplay();
+	    	    if(digitalRead(pinIRd)==LOW)
+	    	    {
+	    	    	while(analogRead(pinIRa)<=10);
+	    	    	sensor_S[arr1]=analogRead(pinIRa);
+	    	    	arr1++;
+	    	    	var1++;
+	    	    	display.setTextSize(4);
+	    	    	display.setCursor(40,20);
+	    	    	display.println(arr1);
+	    	    	display.display();
+	    	    }
+	    	    else{
+	    	    	dumb = analogRead(pinIRa);
+	    	    }
+	    	}
+	    	display.setCursor(0,0);
+	    	display.setTextSize(1);
+	    	for(int i=0; i<10; i++){
+	    		jmlArr+=sensor_S[i];
+	    	}
+	    	display.setCursor(0,50);
+	    	display.println(jmlArr/10);
+	    	display.display();	
+	    }
+	    if(digitalRead(pbReset)==LOW)
+	    {
+	    	delay(20);
+	    	if(digitalRead(pbReset)==LOW)
+	    	{
+	    		while(digitalRead(pbReset)==LOW);
+	    		var1=0;
+	    		arr1=0;
+	    		jmlArr=0;
+	    		goto kalibrasi;
+	    	}
+	    }	
 	}
 
 counterStart:
