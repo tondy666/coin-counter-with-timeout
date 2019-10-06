@@ -18,12 +18,12 @@ Adafruit_SH1106 display(OLED_RESET);
 #endif
 
 //sistem define
-#define pinIRd 7
+#define pinIRd 17
 #define pinIRa A0
 #define pinLED 13
-#define pbReset 11
-#define pbOK 10
-#define pbScroll 8
+#define pbReset 13
+#define pbOK 8
+#define pbScroll 9
 int IRvalueA = 0;
 int IRvalueD = 0;
 int jmlkoin = 0;
@@ -204,60 +204,63 @@ kalibrasi:
 	display.display();
 	while(1){
 	    // statement
-	    if(digitalRead(pinIRd)==LOW)
-	    {
-	    	while(var1<10){
-	    		display.clearDisplay();
-	    	    if(digitalRead(pinIRd)==LOW)
-	    	    {
-	    	    	while(analogRead(pinIRa)<=10);
-	    	    	sensor_S[arr1]=analogRead(pinIRa);
-	    	    	arr1++;
-	    	    	var1++;
-	    	    	display.setTextSize(4);
-	    	    	display.setCursor(40,20);
-	    	    	display.println(arr1);
-	    	    	display.display();
-	    	    }
-	    	    else{
-	    	    	dumb = analogRead(pinIRa);
-	    	    }
+	    // if(digitalRead(pinIRd)==LOW)
+	    // {
+	    		
+	    // }
+	    while(var1<10){
+	    	display.clearDisplay();
+	    	if(digitalRead(pinIRd)==LOW)
+	    	{
+	    		delay(20);
+	    	    while(analogRead(pinIRa)<=10);
+	    	    sensor_S[arr1]=analogRead(pinIRa);
+	    	    arr1++;
+	    	    var1++;
+	    	    display.setTextSize(4);
+	    	    display.setCursor(40,20);
+	    	    display.println(arr1);
+	    	    display.display();
 	    	}
-
-	    	while(var2<10){
-	    		display.clearDisplay();
-	    		if(digitalRead(pinIRd)==LOW)
-	    	    {
-	    	    	while(analogRead(pinIRa)<=10);
-	    	    	sensor_L[arr2]=analogRead(pinIRa);
-	    	    	arr2++;
-	    	    	var2++;
-	    	    	display.setTextSize(4);
-	    	    	display.setCursor(40,20);
-	    	    	display.println(arr2);
-	    	    	display.display();
-	    	    }
-	    	    else{
-	    	    	dumb = analogRead(pinIRa);
-	    	    }
+	    	else{
+	    	    dumb = analogRead(pinIRa);
 	    	}
-
-	    	display.setTextSize(1);
-	    	for(int x=0; x<10; x++){
-	    	    jmlArrL+=sensor_L[x];
-	    	}
-	    	for(int i=0; i<10; i++){
-	    		jmlArrS+=sensor_S[i];
-	    	}
-
-	    	jmlArrL=jmlArrL/10;
-	    	jmlArrS=jmlArrS/10;
-	    	ratarata=(jmlArrS+jmlArrL)/2;
-
-	    	display.setCursor(0,50);
-	    	display.println(ratarata);
-	    	display.display();	
 	    }
+
+	    while(var2<10){
+	    	display.clearDisplay();
+	    	if(digitalRead(pinIRd)==LOW)
+	    	{
+	    		delay(20);
+	    	    while(analogRead(pinIRa)<=10);
+	    	    sensor_L[arr2]=analogRead(pinIRa);
+	    	    arr2++;
+	    	    var2++;
+	    	    display.setTextSize(4);
+	    	    display.setCursor(40,20);
+	    	    display.println(arr2);
+	    	    display.display();
+	    	}
+	    	else{
+	    	    dumb = analogRead(pinIRa);
+	    	}
+	    }
+	    
+	    for(int x=0; x<10; x++){
+	    	jmlArrL+=sensor_L[x];
+	    }
+	    for(int i=0; i<10; i++){
+	    	jmlArrS+=sensor_S[i];
+	    }
+
+	    jmlArrL=jmlArrL/10;
+	    jmlArrS=jmlArrS/10;
+	    ratarata=(jmlArrS+jmlArrL)/2;
+
+	    display.setTextSize(1);
+	    display.setCursor(0,50);
+	    display.println(ratarata);
+	    display.display();
 
 	    if(digitalRead(pbOK)==LOW)
 		{
@@ -399,7 +402,7 @@ void showBnner(void)
 	display.setTextColor(WHITE);
 	display.println("TIMEOUT COIN");
 	display.display();
-	delay(3000);
+	delay(1000);
 	display.clearDisplay();
 
 }
