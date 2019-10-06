@@ -43,6 +43,8 @@ int adccoba=27;
 int jmlArrS=0;
 int jmlArrL=0;
 int ratarata=0;
+uint64_t time_loop=0;
+uint64_t time_val=2000;
 unsigned int sensor_L[10] = {};
 unsigned int sensor_S[10] = {};
 int dumb = 0;
@@ -308,52 +310,79 @@ counterStart:
 	while(1){
 		// statement
 		display.clearDisplay();
+		time_loop=0;
 
 		if(analogRead(pinIRa)<=adccoba)
 		{
 
 			delay(10);
-      		adc = analogRead(pinIRa);
-      		while (analogRead(pinIRa) <= adccoba);
-      		digitalWrite(LED_BUILTIN, HIGH);
-      		jmlkoin++;
-      		koin = 1000;
-      		jmltunai += 10;
+      		while (analogRead(pinIRa)<=adccoba && time_loop++<=time_val);
+      		if(time_loop>=time_val){
+      			display.clearDisplay();
+      			display.setCursor(30,30);
+      			display.println("ERROR");
+      			display.display();
+      			Serial.println("ERROR");
+  			}      			
+      		else{
+      			digitalWrite(LED_BUILTIN, HIGH);
+      			jmlkoin++;
+      			koin = 1000;
+      			jmltunai += 10;
 
-      		display.setTextSize(4);
-			display.setTextColor(WHITE);
-      		display.setCursor(40,0);
-      		display.println(jmlkoin);
-      		display.setTextSize(1);
-      		display.setCursor(0,50);
-      		display.println(koin);
-      		display.setCursor(90,50);
-      		display.print(jmltunai);
-      		display.print("00");
-      		display.display();
+      			display.setTextSize(4);
+				display.setTextColor(WHITE);
+      			display.setCursor(40,0);
+      			display.println(jmlkoin);
+      			display.setTextSize(1);
+      			display.setCursor(0,50);
+      			display.println(koin);
+      			display.setCursor(90,50);
+      			display.print(jmltunai);
+      			display.print("00");
+      			display.display();
+      		}		
 		}
 		else if(analogRead(pinIRa)<=100)
 		{
 			delay(10);
-      		adc = analogRead(pinIRa);
-      		while (analogRead(pinIRa) <= 100);
-      		digitalWrite(LED_BUILTIN, HIGH);
-      		jmlkoin++;
-      		koin = 500;
-      		jmltunai += 5;
+      		while (analogRead(pinIRa) <= 100 && time_loop++<=time_val);
+      		if(time_loop>=time_val){
+      			display.clearDisplay();
+      			display.setTextSize(3);
+      			display.setCursor(30,30);
+      			display.println("ERROR");
+      			display.display();
+      			Serial.println("ERROR");
+      			if(digitalRead(pbOK)==LOW)
+	    		{
+	    			delay(20);
+	    			if(digitalRead(pbOK)==LOW)
+	    			{
+	    				while(digitalRead(pbOK)==LOW);
+	    				break;
+	    			}
+	   			 }
+  			}else{
+  				digitalWrite(LED_BUILTIN, HIGH);
+      			jmlkoin++;
+      			koin = 500;
+      			jmltunai += 5;
 
-      		display.setTextSize(4);
-			display.setTextColor(WHITE);
-      		display.setCursor(40,0);
-      		display.println(jmlkoin);
-      		display.setTextSize(1);
-			display.setTextColor(WHITE);
-      		display.setCursor(0,50);
-      		display.println(koin);
-      		display.setCursor(90,50);
-      		display.print(jmltunai);
-      		display.print("00");
-      		display.display();
+      			display.setTextSize(4);
+				display.setTextColor(WHITE);
+      			display.setCursor(40,0);
+      			display.println(jmlkoin);
+      			display.setTextSize(1);
+				display.setTextColor(WHITE);
+      			display.setCursor(0,50);
+      			display.println(koin);
+      			display.setCursor(90,50);
+      			display.print(jmltunai);
+      			display.print("00");
+      			display.display();
+  			}
+      		
 		}
 
 		delay(50);
