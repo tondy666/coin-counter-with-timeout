@@ -39,6 +39,7 @@ int arrmax = 0;
 int batas;
 int batasTersimpan;
 int adc;
+int adccoba=27;
 int jmlArrS=0;
 int jmlArrL=0;
 int ratarata=0;
@@ -203,22 +204,21 @@ kalibrasi:
 	display.drawLine(0,10,550,10,WHITE); 
 	display.display();
 	while(1){
-	    // statement
-	    // if(digitalRead(pinIRd)==LOW)
-	    // {
-	    		
-	    // }
 	    while(var1<10){
 	    	display.clearDisplay();
 	    	if(digitalRead(pinIRd)==LOW)
 	    	{
-	    		delay(20);
-	    	    while(analogRead(pinIRa)<=10);
-	    	    sensor_S[arr1]=analogRead(pinIRa);
-	    	    arr1++;
-	    	    var1++;
+	    		while(digitalRead(pinIRd)==LOW){
+	    		    // statement
+	    		    sensor_S[arr1]=analogRead(pinIRa);
+	    		    if(sensor_S[arr1]!=0){
+	    		    	arr1++;
+	    	    		var1++;
+	    	    		break;
+	    		    }
+	    		}
 	    	    display.setTextSize(4);
-	    	    display.setCursor(40,20);
+	    	    display.setCursor(50,20);
 	    	    display.println(arr1);
 	    	    display.display();
 	    	}
@@ -248,9 +248,16 @@ kalibrasi:
 	    
 	    for(int x=0; x<10; x++){
 	    	jmlArrL+=sensor_L[x];
+	    	display.setTextSize(1);
+	    	display.setCursor(0,0);
+	    	display.print(jmlArrL+" ");
+	    	display.display();
 	    }
 	    for(int i=0; i<10; i++){
 	    	jmlArrS+=sensor_S[i];
+	    	display.setCursor(0,30);
+	    	display.print(jmlArrS+" ");
+	    	display.display();
 	    }
 
 	    jmlArrL=jmlArrL/10;
@@ -293,39 +300,40 @@ kalibrasi:
 
 counterStart:
 	display.clearDisplay();
+	display.setTextSize(1);
+	display.setTextColor(WHITE);
+	display.setCursor(25,30);
+	display.println("INSERT COIN!");
+	display.display();
 	while(1){
 		// statement
-		display.setTextSize(1);
-		display.setTextColor(WHITE);
-		display.setCursor(10,0);
-		display.println("COUNTER MODE : ON");
-		display.drawLine(0,10,550,10,WHITE); 
-		display.setCursor(0,20);
-		display.println("$");
-		display.setCursor(0,30);
-		display.println("Jumlah Coin:");
-		display.setCursor(0,40);
-		display.println("Jumlah Uang:");
-		display.display();
+		display.clearDisplay();
 
-		if(analogRead(pinIRa)<=batasTersimpan)
+		if(analogRead(pinIRa)<=adccoba)
 		{
-			display.clearDisplay();
+
 			delay(10);
       		adc = analogRead(pinIRa);
-      		while (analogRead(pinIRa) <= batasTersimpan);
+      		while (analogRead(pinIRa) <= adccoba);
       		digitalWrite(LED_BUILTIN, HIGH);
       		jmlkoin++;
       		koin = 1000;
       		jmltunai += 10;
 
-      		display.setCursor(40,20);
+      		display.setTextSize(4);
+			display.setTextColor(WHITE);
+      		display.setCursor(40,0);
+      		display.println(jmlkoin);
+      		display.setTextSize(1);
+      		display.setCursor(0,50);
       		display.println(koin);
+      		display.setCursor(90,50);
+      		display.print(jmltunai);
+      		display.print("00");
       		display.display();
 		}
 		else if(analogRead(pinIRa)<=100)
 		{
-			display.clearDisplay();
 			delay(10);
       		adc = analogRead(pinIRa);
       		while (analogRead(pinIRa) <= 100);
@@ -334,8 +342,17 @@ counterStart:
       		koin = 500;
       		jmltunai += 5;
 
-      		display.setCursor(40,20);
+      		display.setTextSize(4);
+			display.setTextColor(WHITE);
+      		display.setCursor(40,0);
+      		display.println(jmlkoin);
+      		display.setTextSize(1);
+			display.setTextColor(WHITE);
+      		display.setCursor(0,50);
       		display.println(koin);
+      		display.setCursor(90,50);
+      		display.print(jmltunai);
+      		display.print("00");
       		display.display();
 		}
 
