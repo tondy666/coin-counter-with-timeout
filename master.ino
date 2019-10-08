@@ -24,6 +24,7 @@ Adafruit_SH1106 display(OLED_RESET);
 #define pbReset 13
 #define pbOK 8
 #define pbScroll 9
+#define pbOUT 11
 #define BUZZER A7
 int IRvalueA = 0;
 int IRvalueD = 0;
@@ -59,6 +60,7 @@ void setup()
   	pinMode(pbOK, INPUT_PULLUP);
   	pinMode(pbScroll, INPUT_PULLUP);
   	pinMode(pbReset, INPUT_PULLUP);
+  	pinMode(pbOUT, INPUT_PULLUP);
   	pinMode(BUZZER, OUTPUT);
 
 	display.begin(SH1106_SWITCHCAPVCC, 60);
@@ -336,6 +338,20 @@ counterStart:
         		display.clearDisplay();
         		goto ResetConter;
       		}
+    	}
+
+    	if(digitalRead(pbOUT)==LOW)
+    	{
+    		delay(20);
+    		if(digitalRead(pbOUT)==LOW)
+    		{
+    			while(digitalRead(pbOUT)==LOW);
+    			koin = 0;
+	    		jmlkoin=0;
+      			jmltunai=0;
+    			display.clearDisplay();
+    			goto MenuUtamaCounter;
+    		}
     	}
 	}
 
