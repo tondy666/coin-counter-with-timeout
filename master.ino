@@ -24,6 +24,7 @@ Adafruit_SH1106 display(OLED_RESET);
 #define pbReset 13
 #define pbOK 8
 #define pbScroll 9
+#define BUZZER A7
 int IRvalueA = 0;
 int IRvalueD = 0;
 int jmlkoin = 0;
@@ -58,6 +59,7 @@ void setup()
   	pinMode(pbOK, INPUT_PULLUP);
   	pinMode(pbScroll, INPUT_PULLUP);
   	pinMode(pbReset, INPUT_PULLUP);
+  	pinMode(BUZZER, OUTPUT);
 
 	display.begin(SH1106_SWITCHCAPVCC, 60);
 	display.clearDisplay();
@@ -199,76 +201,16 @@ MenuUtamaCredit:
 
 kalibrasi:
 	display.clearDisplay();
-	display.setTextSize(1);
-	display.setTextColor(WHITE);
-	display.setCursor(10,0);
-	display.println("KALIBRASI MODE : ON");
-	display.drawLine(0,10,550,10,WHITE); 
-	display.display();
 	while(1){
-	    while(var1<10){
-	    	display.clearDisplay();
-	    	if(digitalRead(pinIRd)==LOW)
-	    	{
-	    		while(digitalRead(pinIRd)==LOW){
-	    		    // statement
-	    		    sensor_S[arr1]=analogRead(pinIRa);
-	    		    if(sensor_S[arr1]!=0){
-	    		    	arr1++;
-	    	    		var1++;
-	    	    		break;
-	    		    }
-	    		}
-	    	    display.setTextSize(4);
-	    	    display.setCursor(50,20);
-	    	    display.println(arr1);
-	    	    display.display();
-	    	}
-	    	else{
-	    	    dumb = analogRead(pinIRa);
-	    	}
-	    }
-
-	    while(var2<10){
-	    	display.clearDisplay();
-	    	if(digitalRead(pinIRd)==LOW)
-	    	{
-	    		delay(20);
-	    	    while(analogRead(pinIRa)<=10);
-	    	    sensor_L[arr2]=analogRead(pinIRa);
-	    	    arr2++;
-	    	    var2++;
-	    	    display.setTextSize(4);
-	    	    display.setCursor(40,20);
-	    	    display.println(arr2);
-	    	    display.display();
-	    	}
-	    	else{
-	    	    dumb = analogRead(pinIRa);
-	    	}
-	    }
-	    
-	    for(int x=0; x<10; x++){
-	    	jmlArrL+=sensor_L[x];
-	    	display.setTextSize(1);
-	    	display.setCursor(0,0);
-	    	display.print(jmlArrL+" ");
-	    	display.display();
-	    }
-	    for(int i=0; i<10; i++){
-	    	jmlArrS+=sensor_S[i];
-	    	display.setCursor(0,30);
-	    	display.print(jmlArrS+" ");
-	    	display.display();
-	    }
-
-	    jmlArrL=jmlArrL/10;
-	    jmlArrS=jmlArrS/10;
-	    ratarata=(jmlArrS+jmlArrL)/2;
-
 	    display.setTextSize(1);
-	    display.setCursor(0,50);
-	    display.println(ratarata);
+	    display.setTextColor(WHITE);
+	    display.setCursor(5,20);
+	    display.println("This feature will be");
+	    display.setCursor(40,30);
+	    display.println("out soon");
+	    display.setCursor(40,50);
+	    display.setTextColor(BLACK,WHITE);
+	    display.println("Press OK");
 	    display.display();
 
 	    if(digitalRead(pbOK)==LOW)
@@ -277,27 +219,9 @@ kalibrasi:
 			if(digitalRead(pbOK)==LOW)
 			{
 				while(digitalRead(pbOK)==LOW);
-				batas = ratarata;
-    			EEPROM.write(0, batas);
 				goto MenuUtamaKalibrasi;
 			}
 		}
-
-	    if(digitalRead(pbReset)==LOW)
-	    {
-	    	delay(20);
-	    	if(digitalRead(pbReset)==LOW)
-	    	{
-	    		while(digitalRead(pbReset)==LOW);
-	    		var1=0;
-	    		arr1=0;
-	    		var2=0;
-	    		arr2=0;
-	    		jmlArrS=0;
-	    		jmlArrL=0;
-	    		goto kalibrasi;
-	    	}
-	    }	
 	}
 
 counterStart:
@@ -320,6 +244,14 @@ counterStart:
       		if(time_loop>=time_val){
       			display.clearDisplay();
       			display.setCursor(30,30);
+      			digitalWrite(BUZZER, HIGH);
+      			delay(300);
+      			digitalWrite(BUZZER, LOW);
+      			delay(1000);
+      			digitalWrite(BUZZER, HIGH);
+      			delay(300);
+      			digitalWrite(BUZZER, LOW);
+      			delay(1000);
       			display.println("ERROR");
       			display.display();
       			Serial.println("ERROR");
@@ -351,6 +283,14 @@ counterStart:
       			display.clearDisplay();
       			display.setTextSize(3);
       			display.setCursor(30,30);
+      			digitalWrite(BUZZER, HIGH);
+      			delay(300);
+      			digitalWrite(BUZZER, LOW);
+      			delay(1000);
+      			digitalWrite(BUZZER, HIGH);
+      			delay(300);
+      			digitalWrite(BUZZER, LOW);
+      			delay(1000);
       			display.println("ERROR");
       			display.display();
       			Serial.println("ERROR");
@@ -409,6 +349,8 @@ ResetConter:
 	while(1){
 	    // statement
 	    koin = 0;
+	    jmlkoin=0;
+      	jmltunai=0;
 	    goto counterStart;
 	}
 
