@@ -41,7 +41,7 @@ int arrmax = 0;
 int batas;
 int batasTersimpan;
 int adc;
-int adccoba=32;
+int adccoba=44;
 int jmlArrS=0;
 int jmlArrL=0;
 int ratarata=0;
@@ -421,6 +421,9 @@ void showIDName(void)
 	display.println("FITROTUL IRDA A.");
 	display.setCursor(0,45);
 	display.println("1110171047");
+	display.setCursor(100,50);
+	display.setTextColor(BLACK,WHITE);
+	display.println("MENU");
 	display.display();
 	delay(20);
 	display.clearDisplay();
