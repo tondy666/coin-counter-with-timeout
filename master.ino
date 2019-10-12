@@ -41,7 +41,7 @@ int arrmax = 0;
 int batas;
 int batasTersimpan;
 int adc;
-int adccoba=27;
+int adccoba=32;
 int jmlArrS=0;
 int jmlArrL=0;
 int ratarata=0;
@@ -245,18 +245,17 @@ counterStart:
       		while (analogRead(pinIRa)<=adccoba && time_loop++<=time_val);
       		if(time_loop>=time_val){
       			display.clearDisplay();
-      			display.setCursor(30,30);
-      			digitalWrite(BUZZER, HIGH);
-      			delay(300);
-      			digitalWrite(BUZZER, LOW);
-      			delay(1000);
-      			digitalWrite(BUZZER, HIGH);
-      			delay(300);
-      			digitalWrite(BUZZER, LOW);
-      			delay(1000);
+      			display.setCursor(25,30);
       			display.println("ERROR");
       			display.display();
-      			Serial.println("ERROR");
+      			digitalWrite(BUZZER, HIGH);
+      			delay(200);
+      			digitalWrite(BUZZER, LOW);
+      			delay(200);
+      			digitalWrite(BUZZER, HIGH);
+      			delay(200);
+      			digitalWrite(BUZZER, LOW);
+      			delay(700);
   			}      			
       		else{
       			digitalWrite(LED_BUILTIN, HIGH);
@@ -284,18 +283,17 @@ counterStart:
       		if(time_loop>=time_val){
       			display.clearDisplay();
       			display.setTextSize(3);
-      			display.setCursor(30,30);
-      			digitalWrite(BUZZER, HIGH);
-      			delay(300);
-      			digitalWrite(BUZZER, LOW);
-      			delay(1000);
-      			digitalWrite(BUZZER, HIGH);
-      			delay(300);
-      			digitalWrite(BUZZER, LOW);
-      			delay(1000);
+      			display.setCursor(25,30);
       			display.println("ERROR");
       			display.display();
-      			Serial.println("ERROR");
+      			digitalWrite(BUZZER, HIGH);
+      			delay(200);
+      			digitalWrite(BUZZER, LOW);
+      			delay(200);
+      			digitalWrite(BUZZER, HIGH);
+      			delay(200);
+      			digitalWrite(BUZZER, LOW);
+      			delay(700);
       			if(digitalRead(pbOK)==LOW)
 	    		{
 	    			delay(20);
@@ -418,8 +416,11 @@ void showIDName(void)
 	display.setCursor(0,0);
 	display.println("ILFAT IZZAT P.");
 	display.setCursor(0,15);
-	display.setTextColor(WHITE);
+	display.println("1110171039");
+	display.setCursor(0,30);
 	display.println("FITROTUL IRDA A.");
+	display.setCursor(0,45);
+	display.println("1110171047");
 	display.display();
 	delay(20);
 	display.clearDisplay();
@@ -429,12 +430,12 @@ void showBooting(void)
 {
 	display.drawPixel(10,10,WHITE);
 	display.display();
-	delay(1000);
+	delay(500);
 	display.drawPixel(20,10,WHITE);
 	display.display();
-	delay(1000);
+	delay(500);
 	display.drawPixel(30,10,WHITE);
 	display.display();
-	delay(1000);
+	delay(500);
 	display.clearDisplay();
 }
