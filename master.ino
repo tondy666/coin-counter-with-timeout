@@ -41,7 +41,7 @@ int arrmax = 0;
 int batas;
 int batasTersimpan;
 int adc;
-int adccoba=44;
+int adccoba=54;
 int jmlArrS=0;
 int jmlArrL=0;
 int ratarata=0;
