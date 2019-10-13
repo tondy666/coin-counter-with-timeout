@@ -26,6 +26,8 @@ Adafruit_SH1106 display(OLED_RESET);
 #define pbScroll 9
 #define pbOUT 11
 #define BUZZER A7
+#define LED1 22
+#define LED2 23
 int IRvalueA = 0;
 int IRvalueD = 0;
 int jmlkoin = 0;
@@ -39,6 +41,7 @@ int arr1 = 0;
 int arrmin = 0;
 int arrmax = 0;
 int batas;
+int adcValue=0;
 int batasTersimpan;
 int adc;
 int adccoba=54;
@@ -62,11 +65,18 @@ void setup()
   	pinMode(pbReset, INPUT_PULLUP);
   	pinMode(pbOUT, INPUT_PULLUP);
   	pinMode(BUZZER, OUTPUT);
+  	pinMode(LED1, OUTPUT);
+  	pinMode(LED2, OUTPUT);
+
+  	digitalWrite(LED1, HIGH);
+  	digitalWrite(LED2, HIGH);
+
 
 	display.begin(SH1106_SWITCHCAPVCC, 60);
 	display.clearDisplay();
 	showBooting();
 	showBnner();
+
 
 	batasTersimpan=EEPROM.read(0);
 }
@@ -100,7 +110,7 @@ MenuUtamaKalibrasi:
 	display.println("COUNTER");
 	display.setTextColor(WHITE);
 	display.setCursor(0,40);
-	display.println("CREDIT");
+	display.println("SET ADC");
 	display.display();
 	delay(20);
 	while(1){
@@ -138,7 +148,45 @@ MenuUtamaCounter:
 	display.println("COUNTER  ");
 	display.setTextColor(WHITE);
 	display.setCursor(0,40);
-	display.println("CREDIT");
+	display.println("SET ADC");
+	display.display();
+	delay(20);
+	while(1){
+	    // statement
+	    if(digitalRead(pbScroll)==LOW)
+		{
+		    delay(20);
+		    if(digitalRead(pbScroll)==LOW)
+		    {
+		    	while(digitalRead(pbScroll)==LOW);
+		    	goto MenuUtamaADC;
+		    }
+		}
+
+		if(digitalRead(pbOK)==LOW)
+		{
+			delay(20);
+			if(digitalRead(pbOK)==LOW)
+			{
+				while(digitalRead(pbOK)==LOW);
+				goto counterStart;
+			}
+		}
+	}
+
+MenuUtamaADC:
+	adcValue=0;
+	display.clearDisplay();
+	display.setTextSize(2);
+	display.setTextColor(WHITE);
+	display.setCursor(0,0);
+	display.println("KALIBRASI");
+	display.setTextColor(WHITE);
+	display.setCursor(0,20);
+	display.println("COUNTER");
+	display.setTextColor(BLACK,WHITE);
+	display.setCursor(0,40);
+	display.println("SET ADC  ");
 	display.display();
 	delay(20);
 	while(1){
@@ -159,7 +207,7 @@ MenuUtamaCounter:
 			if(digitalRead(pbOK)==LOW)
 			{
 				while(digitalRead(pbOK)==LOW);
-				goto counterStart;
+				goto SetADC;
 			}
 		}
 	}
@@ -169,17 +217,16 @@ MenuUtamaCredit:
 	display.setTextSize(2);
 	display.setTextColor(WHITE);
 	display.setCursor(0,0);
-	display.println("KALIBRASI");
+	display.println("COUNTER");
 	display.setTextColor(WHITE);
 	display.setCursor(0,20);
-	display.println("COUNTER");
+	display.println("SET ADC");
 	display.setTextColor(BLACK,WHITE);
 	display.setCursor(0,40);
 	display.println("CREDIT   ");
 	display.display();
 	delay(20);
 	while(1){
-	    // statement
 	    if(digitalRead(pbScroll)==LOW)
 		{
 		    delay(20);
@@ -189,7 +236,6 @@ MenuUtamaCredit:
 		    	goto MenuUtamaKalibrasi;
 		    }
 		}
-
 		if(digitalRead(pbOK)==LOW)
 		{
 			delay(20);
@@ -201,19 +247,99 @@ MenuUtamaCredit:
 		}
 	}
 
+SetADC:
+	display.clearDisplay();
+	display.setCursor(0,25);
+	display.setTextColor(WHITE);
+	display.setTextSize(1);
+	display.println("Insert value =");
+	display.display();
+	while(1){
+	    // statement
+	    display.clearDisplay();
+	    if(digitalRead(pbScroll)==LOW){
+	    	adcValue++;
+			display.setCursor(0,25);
+			display.setTextColor(WHITE);
+			display.setTextSize(1);
+			display.println("Insert value =");
+			display.setCursor(90,25);
+			display.print(adcValue);
+			display.display();
+	    	delay(50);
+	    }
+	    if(digitalRead(pbOUT)==LOW){
+	    	adcValue--;
+			display.setCursor(0,25);
+			display.setTextColor(WHITE);
+			display.setTextSize(1);
+			display.println("Insert value =");
+			display.setCursor(90,25);
+			display.print(adcValue);
+			display.display();
+	    	delay(50);
+	    }
+	    if(digitalRead(pbOK)==LOW)
+		{
+			delay(20);
+			if(digitalRead(pbOK)==LOW)
+			{
+				while(digitalRead(pbOK)==LOW);
+				batasTersimpan=EEPROM.read(0);
+				digitalWrite(LED1, HIGH);
+        		digitalWrite(LED2, HIGH);
+				goto MenuUtamaADC;
+			}
+		}
+		if (digitalRead(pbReset) == LOW)
+    	{
+      		delay(20);
+      		if (digitalRead(pbReset) == LOW)
+      		{
+        		while (digitalRead(pbReset) == LOW);
+        		EEPROM.write(0, adcValue);
+        		digitalWrite(LED1, LOW);
+        		digitalWrite(LED2, LOW);
+        		digitalWrite(BUZZER, HIGH);
+      			delay(100);
+      			digitalWrite(BUZZER, LOW);
+      			delay(100);
+      			digitalWrite(BUZZER, HIGH);
+      			delay(100);
+      			digitalWrite(BUZZER, LOW);
+      			delay(100);
+      		}
+    	}
+	}
+
 kalibrasi:
 	display.clearDisplay();
 	while(1){
-	    display.setTextSize(1);
-	    display.setTextColor(WHITE);
-	    display.setCursor(5,20);
-	    display.println("This feature will be");
-	    display.setCursor(40,30);
-	    display.println("out soon");
-	    display.setCursor(40,50);
-	    display.setTextColor(BLACK,WHITE);
-	    display.println("Press OK");
-	    display.display();
+
+  		display.clearDisplay();
+  		display.setTextSize(3);
+  		display.setTextColor(WHITE);
+  		display.setCursor(20,20);
+  		display.print(IRvalueA);
+  		display.display();
+
+    	if (IRvalueD == LOW) {
+    		digitalWrite(LED_BUILTIN, HIGH);
+    		digitalWrite(LED1, LOW);
+    		digitalWrite(LED2, HIGH);
+
+  		}
+  		else {
+   		 	digitalWrite(LED_BUILTIN, LOW);
+   		 	digitalWrite(LED2, LOW);
+   		 	digitalWrite(LED1, HIGH);
+
+		}
+  		delay(10);
+  
+  		IRvalueA = analogRead(pinIRa);
+  		IRvalueD = digitalRead(pinIRd);
+
 
 	    if(digitalRead(pbOK)==LOW)
 		{
@@ -221,12 +347,15 @@ kalibrasi:
 			if(digitalRead(pbOK)==LOW)
 			{
 				while(digitalRead(pbOK)==LOW);
+				digitalWrite(LED2, HIGH);
+				digitalWrite(LED1, HIGH);
 				goto MenuUtamaKalibrasi;
 			}
 		}
 	}
 
 counterStart:
+
 	display.clearDisplay();
 	display.setTextSize(1);
 	display.setTextColor(WHITE);
@@ -238,11 +367,11 @@ counterStart:
 		display.clearDisplay();
 		time_loop=0;
 
-		if(analogRead(pinIRa)<=adccoba)
+		if(analogRead(pinIRa)<=batasTersimpan)
 		{
 
 			delay(10);
-      		while (analogRead(pinIRa)<=adccoba && time_loop++<=time_val);
+      		while (analogRead(pinIRa)<=batasTersimpan && time_loop++<=time_val);
       		if(time_loop>=time_val){
       			display.clearDisplay();
       			display.setCursor(25,30);
